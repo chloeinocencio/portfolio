@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chloe Inocencio</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Helvetica, Arial, sans-serif;
+      background: #fff;
+      color: #000;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0;
+      right: 0;
+      padding: 20px 40px;
+      display: flex;
+      gap: 24px;
+      z-index: 100;
+    }
+
+    nav a {
+      font-family: Helvetica, Arial, sans-serif;
+      font-size: 14px;
+      color: #000;
+      text-decoration: none;
+    }
+
+    nav a:hover {
+      text-decoration: underline;
+    }
+
+    /* HERO */
+    .hero {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 120px 40px 80px;
+      text-align: center;
+    }
+
+    .hero-name {
+      width: 560px;
+      max-width: 92vw;
+      margin-bottom: 36px;
+      display: block;
+    }
+
+    .hero-bio {
+      font-size: 16px;
+      line-height: 1.65;
+      max-width: 620px;
+      margin-bottom: 48px;
+      color: #000;
+    }
+
+    .hero-photo {
+      width: 440px;
+      max-width: 90vw;
+      display: block;
+      filter: grayscale(100%);
+      object-fit: cover;
+      border-radius: 50% / 38%;
+    }
+
+    /* PROJECTS */
+    .section {
+      padding: 80px 40px;
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    .section-title {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .project-card {
+      display: flex;
+      align-items: flex-start;
+      gap: 32px;
+      background: #f2f2f2;
+      border-radius: 16px;
+      padding: 28px;
+      margin-bottom: 20px;
+    }
+
+    .project-image {
+      flex-shrink: 0;
+      width: 180px;
+      height: 160px;
+      border: 1.5px solid #ccc;
+      border-radius: 14px;
+      background: #fff;
+      object-fit: cover;
+    }
+
+    .project-image.placeholder {
+      /* empty placeholder style matches screenshots */
+    }
+
+    .project-info {
+      padding-top: 4px;
+    }
+
+    .project-name {
+      font-size: 22px;
+      font-weight: 400;
+      margin-bottom: 6px;
+    }
+
+    .project-stack {
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      color: #888;
+      margin-bottom: 14px;
+      text-transform: uppercase;
+    }
+
+    .project-desc {
+      font-size: 15px;
+      color: #333;
+      line-height: 1.55;
+    }
+
+    /* ART PORTFOLIO */
+    .art-section {
+      padding: 40px 40px 80px;
+      text-align: center;
+    }
+
+    .art-section .section-title {
+      margin-bottom: 20px;
+    }
+
+    .art-link {
+      font-size: 15px;
+      color: #000;
+      text-decoration: underline;
+    }
+
+    /* FOOTER */
+    footer {
+      text-align: center;
+      padding: 32px 40px;
+      font-size: 13px;
+      color: #444;
+      border-top: 1px solid #eee;
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="mailto:">email</a>
+    <a href="https://linkedin.com/in/chloeinocencio" target="_blank">linkedin</a>
+  </nav>
+
+  <section class="hero">
+    <img class="hero-name" src="name.png" alt="Chloe I" />
+
+    <p class="hero-bio">
+      I build products at the intersection of data, design, and human experience.
+      Starting from a background in engineering and analytics, I've grown into designing
+      systems that feel intuitive, purposeful, and user-first.
+    </p>
+
+    <img
+      class="hero-photo"
+      src="photo.jpg"
+      alt="Chloe Inocencio"
+      onerror="this.style.display='none'"
+    />
+  </section>
+
+  <div class="section">
+    <h2 class="section-title">PROJECTS</h2>
+
+    <div class="project-card">
+      <div class="project-image placeholder"></div>
+      <div class="project-info">
+        <div class="project-name">WhereTwo?</div>
+        <div class="project-stack">Node.js &nbsp; PostgreSQL</div>
+        <div class="project-desc">Enter destination, budget, trip length and get full day-by-day itinerary with real activity suggestions.</div>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <div class="project-image placeholder"></div>
+      <div class="project-info">
+        <div class="project-name">WhereTwo?</div>
+        <div class="project-stack">Node.js &nbsp; PostgreSQL</div>
+        <div class="project-desc">Enter destination, budget, trip length and get full day-by-day itinerary with real activity suggestions.</div>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <div class="project-image placeholder"></div>
+      <div class="project-info">
+        <div class="project-name">WhereTwo?</div>
+        <div class="project-stack">Node.js &nbsp; PostgreSQL</div>
+        <div class="project-desc">Enter destination, budget, trip length and get full day-by-day itinerary with real activity suggestions.</div>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <div class="project-image placeholder"></div>
+      <div class="project-info">
+        <div class="project-name">WhereTwo?</div>
+        <div class="project-stack">Node.js &nbsp; PostgreSQL</div>
+        <div class="project-desc">Enter destination, budget, trip length and get full day-by-day itinerary with real activity suggestions.</div>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <div class="project-image placeholder"></div>
+      <div class="project-info">
+        <div class="project-name">WhereTwo?</div>
+        <div class="project-stack">Node.js &nbsp; PostgreSQL</div>
+        <div class="project-desc">Enter destination, budget, trip length and get full day-by-day itinerary with real activity suggestions.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="art-section">
+    <h2 class="section-title">ART PORTFOLIO</h2>
+    <a class="art-link" href="#">Click here</a>
+  </div>
+
+  <footer>
+    &copy; 2026 Chloe Inocencio. All Rights Reserved.
+  </footer>
+
+</body>
+</html>
