@@ -26,6 +26,9 @@
       display: flex;
       gap: 24px;
       z-index: 100;
+      opacity: 0;
+      animation: fadeUp 0.6s ease forwards;
+      animation-delay: 0s;
     }
 
     nav a {
@@ -48,11 +51,25 @@
       text-align: center;
     }
 
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(28px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
     .hero-name {
       width: 600px;
       max-width: 92vw;
       margin-bottom: 36px;
       display: block;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards;
+      animation-delay: 0.1s;
     }
 
     .hero-bio {
@@ -61,6 +78,9 @@
       max-width: 700px;
       margin-bottom: 48px;
       color: #000;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards;
+      animation-delay: 0.35s;
     }
 
     .hero-photo {
@@ -72,6 +92,9 @@
       object-fit: cover;
       object-position: center 50%;
       border-radius: 50%;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards;
+      animation-delay: 0.6s;
     }
 
     /* PROJECTS */
@@ -193,6 +216,13 @@
       }
     }
 
+    /* SCROLL ANIMATIONS */
+    .reveal {
+      opacity: 0;
+      transform: translateY(36px);
+      will-change: opacity, transform;
+    }
+
     /* FOOTER */
     footer {
       text-align: center;
@@ -201,9 +231,23 @@
       color: #444;
       border-top: 1px solid #eee;
     }
+
+    /* PAGE TRANSITION OVERLAY */
+    #page-cover {
+      position: fixed;
+      inset: 0;
+      background: #fff;
+      z-index: 9999;
+      pointer-events: none;
+      opacity: 1;
+      transition: opacity 0.45s ease;
+    }
+    #page-cover.hidden { opacity: 0; }
+    #page-cover.visible { opacity: 1; }
   </style>
 </head>
 <body>
+  <div id="page-cover"></div>
 
   <nav>
     <a href="mailto:chloe94612@gmail.com">email</a>
@@ -228,9 +272,9 @@
   </section>
 
   <div class="section">
-    <h2 class="section-title">PROJECTS</h2>
+    <h2 class="section-title reveal">PROJECTS</h2>
 
-    <a class="project-link" href="wheretwo.html">
+    <a class="project-link reveal" href="wheretwo.html">
       <div class="project-card">
         <div class="project-image placeholder"></div>
         <div class="project-info">
@@ -241,7 +285,7 @@
       </div>
     </a>
 
-    <a class="project-link" href="drip.html">
+    <a class="project-link reveal" href="drip.html">
       <div class="project-card">
         <div class="project-image placeholder"></div>
         <div class="project-info">
@@ -252,7 +296,7 @@
       </div>
     </a>
 
-    <a class="project-link" href="plantr.html">
+    <a class="project-link reveal" href="plantr.html">
       <div class="project-card">
         <div class="project-image placeholder"></div>
         <div class="project-info">
@@ -263,7 +307,7 @@
       </div>
     </a>
 
-    <a class="project-link" href="mindreset.html">
+    <a class="project-link reveal" href="mindreset.html">
       <div class="project-card">
         <div class="project-image placeholder"></div>
         <div class="project-info">
@@ -274,7 +318,7 @@
       </div>
     </a>
 
-    <a class="project-link" href="mems.html">
+    <a class="project-link reveal" href="mems.html">
       <div class="project-card">
         <div class="project-image placeholder"></div>
         <div class="project-info">
@@ -285,9 +329,9 @@
       </div>
     </a>
 
-    <a class="project-link" href="sorority.html">
+    <a class="project-link reveal" href="sorority.html">
       <div class="project-card">
-        <div class="project-image placeholder"></div>
+        <img class="project-image" src="aphig.png" alt="APhiG Website" />
         <div class="project-info">
           <div class="project-name">APhiG Website</div>
           <div class="project-stack">HTML &nbsp; CSS</div>
@@ -297,14 +341,48 @@
     </a>
   </div>
 
-  <div class="art-section">
+  <div class="art-section reveal">
     <h2 class="section-title">ART PORTFOLIO</h2>
     <a class="art-link" href="#">Click here</a>
   </div>
 
-  <footer>
+  <footer class="reveal">
     &copy; 2026 Chloe Inocencio. All Rights Reserved.
   </footer>
+
+  <script>
+    // Page enter
+    const cover = document.getElementById('page-cover');
+    requestAnimationFrame(() => requestAnimationFrame(() => cover.classList.add('hidden')));
+
+    // Page exit on internal links
+    document.addEventListener('click', e => {
+      const link = e.target.closest('a[href]');
+      if (!link) return;
+      const href = link.getAttribute('href');
+      if (!href || href.startsWith('http') || href.startsWith('mailto') || href.startsWith('#')) return;
+      e.preventDefault();
+      cover.classList.remove('hidden');
+      cover.classList.add('visible');
+      setTimeout(() => { window.location.href = href; }, 450);
+    });
+
+    // Scroll reveal
+    const revealEls = document.querySelectorAll('.reveal');
+    function updateScroll() {
+      const vh = window.innerHeight;
+      revealEls.forEach(el => {
+        const rect = el.getBoundingClientRect();
+        const enter = (vh - rect.top) / (vh * 0.35);
+        const exit = 1 - Math.max(0, (-rect.bottom) / (vh * 0.2));
+        const p = Math.min(1, Math.max(0, Math.min(enter, exit)));
+        el.style.opacity = p;
+        el.style.transform = `translateY(${(1 - p) * 36}px)`;
+      });
+    }
+    window.addEventListener('scroll', updateScroll, { passive: true });
+    updateScroll();
+  </script>
 
 </body>
 </html>
