@@ -7,19 +7,62 @@
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: Helvetica, Arial, sans-serif; background: #fff; color: #000; }
-    nav { position: fixed; top: 20px; right: 60px; padding: 20px 40px; display: flex; gap: 24px; z-index: 100; }
+    nav {
+      position: fixed; top: 0; right: 0; padding: 20px 40px;
+      display: flex; gap: 24px; z-index: 100;
+      opacity: 0; animation: fadeUp 0.6s ease forwards;
+    }
     nav a { font-size: 15px; color: #000; text-decoration: none; }
     nav a:hover { text-decoration: underline; }
-    .back { display: inline-block; margin: 120px 0 0 60px; font-size: 14px; color: #888; text-decoration: none; }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .back {
+      display: inline-block; margin: 100px 0 0 60px;
+      font-size: 14px; color: #888; text-decoration: none;
+      opacity: 0; animation: fadeUp 0.7s ease forwards; animation-delay: 0.15s;
+    }
     .back:hover { color: #000; }
-    .content { max-width: 860px; margin: 40px auto; padding: 0 40px 100px; }
-    h1 { font-size: 36px; font-weight: 400; margin-bottom: 16px; }
-    .stack { font-size: 11px; letter-spacing: 0.1em; color: #888; text-transform: uppercase; margin-bottom: 32px; }
-    .placeholder-img { width: 100%; height: 400px; background: #f2f2f2; border-radius: 16px; margin-bottom: 40px; }
-    p { font-size: 15px; line-height: 1.7; color: #333; }
+    .content { max-width: 760px; margin: 40px auto; padding: 0 40px 120px; }
+    h1 {
+      font-size: 38px; font-weight: 400; margin-bottom: 10px;
+      opacity: 0; animation: fadeUp 0.7s ease forwards; animation-delay: 0.25s;
+    }
+    .stack {
+      font-size: 11px; letter-spacing: 0.1em; color: #888;
+      text-transform: uppercase; margin-bottom: 48px;
+      opacity: 0; animation: fadeUp 0.7s ease forwards; animation-delay: 0.35s;
+    }
+    .hero-img {
+      width: 100%; height: 380px; object-fit: cover;
+      border-radius: 16px; margin-bottom: 56px; display: block;
+      background: #f2f2f2;
+      opacity: 0; animation: fadeUp 0.7s ease forwards; animation-delay: 0.45s;
+    }
+    .section { margin-bottom: 48px; }
+    .section h2 {
+      font-size: 11px; font-weight: 700; letter-spacing: 0.14em;
+      text-transform: uppercase; color: #888; margin-bottom: 14px;
+    }
+    .section p { font-size: 15px; line-height: 1.75; color: #222; }
+    .divider { border: none; border-top: 1px solid #eee; margin: 48px 0; }
+    .reveal {
+      opacity: 0; transform: translateY(28px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    #page-cover {
+      position: fixed; inset: 0; background: #fff;
+      z-index: 9999; pointer-events: none;
+      opacity: 1; transition: opacity 0.45s ease;
+    }
+    #page-cover.hidden  { opacity: 0; }
+    #page-cover.visible { opacity: 1; }
   </style>
 </head>
 <body>
+  <div id="page-cover"></div>
   <nav>
     <a href="mailto:chloe94612@gmail.com">email</a>
     <a href="https://www.linkedin.com/in/chloe-inocencio" target="_blank">linkedin</a>
@@ -27,9 +70,55 @@
   <a class="back" href="index.html">← back</a>
   <div class="content">
     <h1>MEMS</h1>
-    <div class="stack"></div>
-    <div class="placeholder-img"></div>
-    <p>Project description coming soon.</p>
+    <div class="stack">Coming Soon</div>
+    <div class="hero-img"></div>
+
+    <div class="section reveal">
+      <h2>The Problem</h2>
+      <p>Coming soon.</p>
+    </div>
+    <hr class="divider reveal" />
+    <div class="section reveal">
+      <h2>Process</h2>
+      <p>Coming soon.</p>
+    </div>
+    <hr class="divider reveal" />
+    <div class="section reveal">
+      <h2>What Worked & What Didn't</h2>
+      <p>Coming soon.</p>
+    </div>
+    <hr class="divider reveal" />
+    <div class="section reveal">
+      <h2>Design Decisions</h2>
+      <p>Coming soon.</p>
+    </div>
+    <hr class="divider reveal" />
+    <div class="section reveal">
+      <h2>The Solution</h2>
+      <p>Coming soon.</p>
+    </div>
+    <hr class="divider reveal" />
+    <div class="section reveal">
+      <h2>Why This Was the Right Call</h2>
+      <p>Coming soon.</p>
+    </div>
   </div>
+  <script>
+    const cover = document.getElementById('page-cover');
+    requestAnimationFrame(() => requestAnimationFrame(() => cover.classList.add('hidden')));
+    document.addEventListener('click', e => {
+      const link = e.target.closest('a[href]');
+      if (!link) return;
+      const href = link.getAttribute('href');
+      if (!href || href.startsWith('http') || href.startsWith('mailto') || href.startsWith('#')) return;
+      e.preventDefault();
+      cover.classList.remove('hidden'); cover.classList.add('visible');
+      setTimeout(() => { window.location.href = href; }, 450);
+    });
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+    }, { threshold: 0.08 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  </script>
 </body>
 </html>
