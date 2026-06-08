@@ -5,10 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Chloe Inocencio</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html {
+      scroll-snap-type: y mandatory;
+      overflow-y: scroll;
+      height: 100%;
     }
 
     body {
@@ -16,265 +18,340 @@
       background: #fff;
       color: #000;
       cursor: none;
+      height: 100%;
     }
 
-    /* CUSTOM CURSOR */
+    /* ── CURSOR ── */
     #cursor {
       position: fixed;
-      width: 8px;
-      height: 8px;
+      width: 10px;
+      height: 10px;
       background: #000;
       border-radius: 50%;
       pointer-events: none;
       z-index: 99999;
       transform: translate(-50%, -50%);
-      transition: width 0.25s ease, height 0.25s ease,
-                  background 0.25s ease, border 0.25s ease,
-                  opacity 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: width 0.3s cubic-bezier(0.34,1.56,0.64,1),
+                  height 0.3s cubic-bezier(0.34,1.56,0.64,1),
+                  background 0.3s ease,
+                  opacity 0.25s ease;
       will-change: left, top;
     }
-    #cursor.hovering {
-      width: 40px;
-      height: 40px;
-      background: transparent;
-      border: 1.5px solid #000;
-    }
-    #cursor.hidden { opacity: 0; }
-
-    /* SCROLL PROGRESS */
-    #progress {
-      position: fixed;
-      top: 0;
-      left: 0;
-      height: 2px;
+    #cursor.big {
+      width: 80px;
+      height: 80px;
       background: #000;
-      z-index: 10000;
-      width: 0%;
-      transition: width 0.08s linear;
     }
+    #cursor-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      color: #fff;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+      white-space: nowrap;
+      user-select: none;
+    }
+    #cursor.big #cursor-label { opacity: 1; }
 
-    /* NAV */
+    /* ── NAV ── */
     nav {
       position: fixed;
       top: 0;
       right: 0;
-      padding: 20px 40px;
+      padding: 24px 48px;
       display: flex;
-      gap: 24px;
-      z-index: 100;
-      opacity: 0;
-      animation: fadeUp 0.6s ease forwards;
-      animation-delay: 0s;
+      gap: 28px;
+      z-index: 300;
     }
-
     nav a {
-      font-family: Helvetica, Arial, sans-serif;
-      font-size: 15px;
+      font-size: 13px;
+      letter-spacing: 0.08em;
       color: #000;
       text-decoration: none;
       display: inline-block;
       transition: transform 0.15s ease;
+      mix-blend-mode: difference;
+      filter: invert(0);
     }
+    .footer-scene nav a { color: #fff; }
+    nav a:hover { text-decoration: underline; }
 
-    nav a:hover {
-      text-decoration: underline;
-    }
-
-    /* HERO */
-    .hero {
+    /* ── SECTION DOTS ── */
+    #dots {
+      position: fixed;
+      right: 22px;
+      top: 50%;
+      transform: translateY(-50%);
       display: flex;
       flex-direction: column;
+      gap: 12px;
+      z-index: 400;
+    }
+    .sdot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: #bbb;
+      transition: background 0.3s, transform 0.3s;
+      cursor: none;
+    }
+    .sdot.active {
+      background: #000;
+      transform: scale(1.6);
+    }
+
+    /* ── SNAP SECTIONS ── */
+    .snap-section {
+      height: 100vh;
+      width: 100vw;
+      scroll-snap-align: start;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* ── HERO ── */
+    .hero-scene {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
       align-items: center;
-      padding: 120px 40px 80px;
-      text-align: center;
+      padding: 0 80px;
+      gap: 64px;
+      background: #fff;
+    }
+
+    .hero-left {
+      opacity: 0;
+      animation: fadeUp 0.9s ease forwards 0.15s;
+    }
+    .hero-name {
+      width: 100%;
+      max-width: 460px;
+      display: block;
+      margin-bottom: 28px;
+    }
+    .hero-bio {
+      font-size: 15px;
+      line-height: 1.72;
+      color: #555;
+      max-width: 400px;
+      margin-bottom: 40px;
+    }
+    .scroll-hint {
+      font-size: 10px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: #bbb;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .scroll-hint::after {
+      content: '';
+      display: block;
+      width: 28px;
+      height: 1px;
+      background: #bbb;
+      animation: pulse 2.2s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%,100% { transform: scaleX(1); opacity: 0.5; }
+      50%      { transform: scaleX(1.8); opacity: 1; }
+    }
+
+    .hero-right {
+      opacity: 0;
+      animation: fadeUp 0.9s ease forwards 0.4s;
+      display: flex;
+      justify-content: center;
+    }
+    .hero-photo {
+      width: 100%;
+      max-width: 380px;
+      height: 480px;
+      object-fit: cover;
+      object-position: center 20%;
+      filter: grayscale(100%) contrast(1.1);
+      border-radius: 999px;
+      transition: filter 0.7s ease, border-radius 0.7s ease;
+    }
+    .hero-right:hover .hero-photo {
+      filter: grayscale(0%) contrast(1);
+      border-radius: 24px;
     }
 
     @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(28px); }
+      from { opacity: 0; transform: translateY(30px); }
       to   { opacity: 1; transform: translateY(0); }
     }
 
-    .hero-name {
-      width: 600px;
-      max-width: 92vw;
-      margin-bottom: 36px;
+    /* ── PROJECT SCENES ── */
+    .project-scene {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color 0.5s ease;
+    }
+
+    .scene-inner {
+      width: 100%;
+      padding: 0 80px;
+      transform-style: preserve-3d;
+      transition: transform 0.08s ease-out;
+      will-change: transform;
+    }
+
+    .scene-eyebrow {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 18px;
+    }
+    .scene-num {
+      font-size: 10px;
+      letter-spacing: 0.28em;
+      color: #aaa;
+      text-transform: uppercase;
+    }
+
+    .scene-title {
       display: block;
-      opacity: 0;
-      animation: fadeUp 0.8s ease forwards;
-      animation-delay: 0.1s;
-    }
-
-    .hero-bio {
-      font-size: 16px;
-      line-height: 1.65;
-      max-width: 700px;
-      margin-bottom: 48px;
-      color: #000;
-      opacity: 0;
-      animation: fadeUp 0.8s ease forwards;
-      animation-delay: 0.35s;
-    }
-
-    /* PHOTO */
-    .photo-wrap {
-      position: relative;
-      display: inline-block;
-      opacity: 0;
-      animation: fadeUp 0.8s ease forwards;
-      animation-delay: 0.6s;
-    }
-
-    .hero-photo {
-      width: 520px;
-      height: 305px;
-      max-width: 90vw;
-      display: block;
-      filter: grayscale(100%) contrast(1.1);
-      object-fit: cover;
-      object-position: center 50%;
-      border-radius: 50%;
-      transition: filter 0.6s ease;
-    }
-
-    .photo-wrap:hover .hero-photo {
-      filter: grayscale(0%) contrast(1);
-    }
-
-    /* PROJECTS */
-    .section {
-      padding: 80px 40px;
-      max-width: 960px;
-      margin: 0 auto;
-    }
-
-    .section-title {
-      font-size: 22px;
+      font-size: clamp(56px, 10.5vw, 128px);
       font-weight: 700;
-      letter-spacing: 0.12em;
-      text-align: center;
-      margin-bottom: 40px;
+      letter-spacing: -0.035em;
+      line-height: 0.88;
+      margin-bottom: 22px;
     }
 
-    a.project-link {
+    .scene-rule {
+      height: 1px;
+      background: #000;
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.8s cubic-bezier(0.77,0,0.175,1);
+      margin-bottom: 36px;
+    }
+    .project-scene.entered .scene-rule { transform: scaleX(1); }
+
+    .scene-body {
+      display: grid;
+      grid-template-columns: 1fr 1.5fr;
+      gap: 56px;
+      align-items: start;
+    }
+
+    .scene-stack {
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #aaa;
+      margin-bottom: 14px;
+    }
+    .scene-desc {
+      font-size: 15px;
+      color: #555;
+      line-height: 1.68;
+      margin-bottom: 36px;
+      max-width: 320px;
+    }
+    .scene-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #000;
+      border-bottom: 1px solid #000;
+      padding-bottom: 3px;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.35s ease, transform 0.35s ease, gap 0.2s ease;
+      text-decoration: none;
+    }
+    .project-scene.entered .scene-cta {
+      opacity: 1;
+      transform: translateY(0);
+      transition-delay: 0.4s;
+    }
+    .scene-cta:hover { gap: 18px; }
+
+    .scene-image {
+      width: 100%;
+      height: 300px;
+      border-radius: 16px;
+      object-fit: cover;
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.65s ease, transform 0.65s ease;
+    }
+    .scene-image.placeholder {
+      background: linear-gradient(135deg, #ddd 0%, #c4c4c4 50%, #ddd 100%);
+      background-size: 200% 200%;
+      transition: opacity 0.65s ease, transform 0.65s ease, background-position 0.55s ease;
+    }
+    .project-scene.entered .scene-image {
+      opacity: 1;
+      transform: translateY(0);
+      transition-delay: 0.18s;
+    }
+    a.scene-link:hover .scene-image.placeholder {
+      background-position: 100% 100%;
+    }
+
+    a.scene-link {
       text-decoration: none;
       color: inherit;
       display: block;
     }
 
-    .project-card {
+    /* ── FOOTER SCENE ── */
+    .footer-scene {
+      background: #0a0a0a;
       display: flex;
+      flex-direction: column;
       align-items: center;
-      gap: 32px;
-      background: #f2f2f2;
-      border-radius: 16px;
-      padding: 28px;
-      margin-bottom: 20px;
-      height: 100vh;
-      transition: background 0.25s ease,
-                  transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
-                  box-shadow 0.3s ease;
+      justify-content: center;
+      gap: 40px;
+      color: #fff;
     }
-
-    .project-card:hover {
-      background: #efefef;
-      transform: translateY(-5px);
-      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.09);
+    .footer-headline {
+      font-size: clamp(40px, 7.5vw, 90px);
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      text-align: center;
+      line-height: 1.0;
     }
-
-    .project-image {
-      flex-shrink: 0;
-      width: 40%;
-      height: 70%;
-      border: 1.5px solid #ccc;
-      border-radius: 14px;
-      background: #fff;
-      object-fit: cover;
-    }
-
-    .project-image.placeholder {
-      background: linear-gradient(135deg, #e4e4e4 0%, #d0d0d0 50%, #e4e4e4 100%);
-      background-size: 200% 200%;
-      background-position: 0% 0%;
-      transition: background-position 0.5s ease;
-    }
-
-    .project-card:hover .project-image.placeholder {
-      background-position: 100% 100%;
-    }
-
-    .project-info {
-      padding-top: 4px;
-      flex: 1;
-    }
-
-    .project-name {
-      font-size: 22px;
-      font-weight: 400;
-      margin-bottom: 6px;
-    }
-
-    .project-stack {
-      font-size: 11px;
-      letter-spacing: 0.1em;
-      color: #888;
-      margin-bottom: 14px;
-      text-transform: uppercase;
-    }
-
-    .project-desc {
-      font-size: 15px;
-      color: #333;
-      line-height: 1.55;
-    }
-
-    .project-arrow {
-      font-size: 20px;
-      color: #000;
-      opacity: 0;
-      transform: translateX(-10px);
-      transition: opacity 0.25s ease, transform 0.25s ease;
-      flex-shrink: 0;
-      padding-right: 4px;
-    }
-
-    .project-card:hover .project-arrow {
-      opacity: 1;
-      transform: translateX(0);
-    }
-
-    /* ART PORTFOLIO */
-    .art-section {
-      padding: 40px 40px 80px;
+    .footer-sub {
+      font-size: 14px;
+      color: #555;
+      letter-spacing: 0.08em;
       text-align: center;
     }
-
-    .art-section .section-title {
-      margin-bottom: 20px;
+    .footer-contacts {
+      display: flex;
+      gap: 40px;
     }
-
-    .art-link {
-      font-size: 15px;
-      color: #000;
-      text-decoration: underline;
-    }
-
-    /* FOOTER */
-    footer {
-      text-align: center;
-      padding: 32px 40px;
+    .footer-contacts a {
       font-size: 13px;
-      color: #444;
-      border-top: 1px solid #eee;
+      letter-spacing: 0.1em;
+      color: #fff;
+      text-decoration: none;
+      border-bottom: 1px solid #333;
+      padding-bottom: 3px;
+      transition: border-color 0.2s;
+    }
+    .footer-contacts a:hover { border-color: #fff; }
+    .footer-copy {
+      font-size: 11px;
+      color: #333;
+      letter-spacing: 0.08em;
     }
 
-    /* SCROLL REVEAL */
-    .reveal {
-      opacity: 0;
-      transform: translateY(36px);
-      will-change: opacity, transform;
-    }
-
-    /* PAGE TRANSITION OVERLAY */
+    /* ── PAGE COVER ── */
     #page-cover {
       position: fixed;
       inset: 0;
@@ -282,57 +359,52 @@
       z-index: 9999;
       pointer-events: none;
       opacity: 1;
-      transition: opacity 0.45s ease;
+      transition: opacity 0.4s ease;
     }
     #page-cover.hidden  { opacity: 0; }
     #page-cover.visible { opacity: 1; }
 
-    /* MOBILE */
-    @media (max-width: 600px) {
-      body { cursor: auto; }
-      #cursor { display: none; }
-
-      .hero { padding: 80px 24px 60px; }
-      .hero-bio { font-size: 15px; }
-      .section { padding: 60px 20px; }
-
-      .project-card {
-        flex-direction: column;
-        gap: 16px;
-        height: auto;
-        min-height: 60vh;
+    /* ── MOBILE ── */
+    @media (max-width: 768px) {
+      body  { cursor: auto; }
+      html  { scroll-snap-type: none; }
+      #cursor, #dots { display: none; }
+      .snap-section { height: auto; min-height: 100vh; }
+      .hero-scene {
+        grid-template-columns: 1fr;
+        padding: 96px 28px 60px;
+        gap: 40px;
       }
-
-      .project-image {
-        width: 100%;
-        height: 240px;
-      }
-
-      .project-info { padding-top: 0; }
-      .project-arrow { display: none; }
+      .hero-photo { max-width: 100%; height: 280px; border-radius: 24px; }
+      .scene-inner { padding: 60px 28px; }
+      .scene-body { grid-template-columns: 1fr; gap: 28px; }
+      .scene-title { font-size: clamp(48px, 13vw, 80px); }
+      .footer-scene { padding: 60px 28px; }
     }
   </style>
 </head>
 <body>
-  <div id="cursor"></div>
-  <div id="progress"></div>
+  <div id="cursor"><span id="cursor-label">VIEW</span></div>
   <div id="page-cover"></div>
+  <div id="dots"></div>
 
   <nav>
     <a href="mailto:chloe94612@gmail.com">email</a>
     <a href="https://www.linkedin.com/in/chloe-inocencio" target="_blank">linkedin</a>
   </nav>
 
-  <section class="hero">
-    <img class="hero-name" src="name.jpg" alt="Chloe I" />
-
-    <p class="hero-bio">
-      I build products at the intersection of data, design, and human experience.
-      Starting from a background in engineering and analytics, I've grown into designing
-      systems that feel intuitive, purposeful, and user-first.
-    </p>
-
-    <div class="photo-wrap">
+  <!-- HERO -->
+  <section class="snap-section hero-scene" data-idx="0">
+    <div class="hero-left">
+      <img class="hero-name" src="name.jpg" alt="Chloe Inocencio" />
+      <p class="hero-bio">
+        I build products at the intersection of data, design, and human experience.
+        Starting from a background in engineering and analytics, I've grown into designing
+        systems that feel intuitive, purposeful, and user-first.
+      </p>
+      <span class="scroll-hint">scroll</span>
+    </div>
+    <div class="hero-right">
       <img
         class="hero-photo"
         src="photo.jpg"
@@ -342,85 +414,124 @@
     </div>
   </section>
 
-  <div class="section">
-    <h2 class="section-title reveal">PROJECTS</h2>
-
-    <a class="project-link reveal" href="wheretwo.html">
-      <div class="project-card">
-        <div class="project-image placeholder"></div>
-        <div class="project-info">
-          <div class="project-name">WhereTwo</div>
-          <div class="project-stack"></div>
-          <div class="project-desc">Coming soon.</div>
+  <!-- PROJECTS -->
+  <section class="snap-section project-scene" data-idx="1" data-tint="#f7f3ee">
+    <a class="scene-link" href="wheretwo.html">
+      <div class="scene-inner">
+        <div class="scene-eyebrow">
+          <span class="scene-num">01 &nbsp;/&nbsp; 05</span>
         </div>
-        <span class="project-arrow">→</span>
+        <span class="scene-title" data-text="WhereTwo">WhereTwo</span>
+        <div class="scene-rule"></div>
+        <div class="scene-body">
+          <div>
+            <div class="scene-stack"></div>
+            <p class="scene-desc">Coming soon.</p>
+            <span class="scene-cta">View case study &nbsp;→</span>
+          </div>
+          <div class="scene-image placeholder"></div>
+        </div>
       </div>
     </a>
+  </section>
 
-    <a class="project-link reveal" href="drip.html">
-      <div class="project-card">
-        <div class="project-image placeholder"></div>
-        <div class="project-info">
-          <div class="project-name">Drip</div>
-          <div class="project-stack"></div>
-          <div class="project-desc">Coming soon.</div>
+  <section class="snap-section project-scene" data-idx="2" data-tint="#ecf2f7">
+    <a class="scene-link" href="drip.html">
+      <div class="scene-inner">
+        <div class="scene-eyebrow">
+          <span class="scene-num">02 &nbsp;/&nbsp; 05</span>
         </div>
-        <span class="project-arrow">→</span>
+        <span class="scene-title" data-text="Drip">Drip</span>
+        <div class="scene-rule"></div>
+        <div class="scene-body">
+          <div>
+            <div class="scene-stack"></div>
+            <p class="scene-desc">Coming soon.</p>
+            <span class="scene-cta">View case study &nbsp;→</span>
+          </div>
+          <div class="scene-image placeholder"></div>
+        </div>
       </div>
     </a>
+  </section>
 
-    <a class="project-link reveal" href="plantr.html">
-      <div class="project-card">
-        <div class="project-image placeholder"></div>
-        <div class="project-info">
-          <div class="project-name">Plantr</div>
-          <div class="project-stack"></div>
-          <div class="project-desc">Coming soon.</div>
+  <section class="snap-section project-scene" data-idx="3" data-tint="#ecf7ed">
+    <a class="scene-link" href="plantr.html">
+      <div class="scene-inner">
+        <div class="scene-eyebrow">
+          <span class="scene-num">03 &nbsp;/&nbsp; 05</span>
         </div>
-        <span class="project-arrow">→</span>
+        <span class="scene-title" data-text="Plantr">Plantr</span>
+        <div class="scene-rule"></div>
+        <div class="scene-body">
+          <div>
+            <div class="scene-stack"></div>
+            <p class="scene-desc">Coming soon.</p>
+            <span class="scene-cta">View case study &nbsp;→</span>
+          </div>
+          <div class="scene-image placeholder"></div>
+        </div>
       </div>
     </a>
+  </section>
 
-    <a class="project-link reveal" href="mindreset.html">
-      <div class="project-card">
-        <div class="project-image placeholder"></div>
-        <div class="project-info">
-          <div class="project-name">mindreset</div>
-          <div class="project-stack"></div>
-          <div class="project-desc">Coming soon.</div>
+  <section class="snap-section project-scene" data-idx="4" data-tint="#f0ecf7">
+    <a class="scene-link" href="mindreset.html">
+      <div class="scene-inner">
+        <div class="scene-eyebrow">
+          <span class="scene-num">04 &nbsp;/&nbsp; 05</span>
         </div>
-        <span class="project-arrow">→</span>
+        <span class="scene-title" data-text="mindreset">mindreset</span>
+        <div class="scene-rule"></div>
+        <div class="scene-body">
+          <div>
+            <div class="scene-stack"></div>
+            <p class="scene-desc">Coming soon.</p>
+            <span class="scene-cta">View case study &nbsp;→</span>
+          </div>
+          <div class="scene-image placeholder"></div>
+        </div>
       </div>
     </a>
+  </section>
 
-    <a class="project-link reveal" href="mems.html">
-      <div class="project-card">
-        <div class="project-image placeholder"></div>
-        <div class="project-info">
-          <div class="project-name">MEMS</div>
-          <div class="project-stack"></div>
-          <div class="project-desc">Coming soon.</div>
+  <section class="snap-section project-scene" data-idx="5" data-tint="#f7ecf2">
+    <a class="scene-link" href="mems.html">
+      <div class="scene-inner">
+        <div class="scene-eyebrow">
+          <span class="scene-num">05 &nbsp;/&nbsp; 05</span>
         </div>
-        <span class="project-arrow">→</span>
+        <span class="scene-title" data-text="MEMS">MEMS</span>
+        <div class="scene-rule"></div>
+        <div class="scene-body">
+          <div>
+            <div class="scene-stack"></div>
+            <p class="scene-desc">Coming soon.</p>
+            <span class="scene-cta">View case study &nbsp;→</span>
+          </div>
+          <div class="scene-image placeholder"></div>
+        </div>
       </div>
     </a>
-  </div>
+  </section>
 
-  <div class="art-section reveal">
-    <h2 class="section-title">ART PORTFOLIO</h2>
-    <a class="art-link" href="#">Click here</a>
-  </div>
-
-  <footer class="reveal">
-    &copy; 2026 Chloe Inocencio. All Rights Reserved.
-  </footer>
+  <!-- FOOTER -->
+  <section class="snap-section footer-scene" data-idx="6">
+    <p class="footer-headline">Let's build<br>something great.</p>
+    <p class="footer-sub">Designer &amp; builder. Available for work.</p>
+    <div class="footer-contacts">
+      <a href="mailto:chloe94612@gmail.com">email</a>
+      <a href="https://www.linkedin.com/in/chloe-inocencio" target="_blank">linkedin</a>
+    </div>
+    <p class="footer-copy">&copy; 2026 Chloe Inocencio. All rights reserved.</p>
+  </section>
 
   <script>
-    /* ── PAGE ENTER ── */
+    /* PAGE ENTER */
     const cover = document.getElementById('page-cover');
     requestAnimationFrame(() => requestAnimationFrame(() => cover.classList.add('hidden')));
 
-    /* ── PAGE EXIT ── */
+    /* PAGE EXIT */
     document.addEventListener('click', e => {
       const link = e.target.closest('a[href]');
       if (!link) return;
@@ -429,91 +540,106 @@
       e.preventDefault();
       cover.classList.remove('hidden');
       cover.classList.add('visible');
-      setTimeout(() => { window.location.href = href; }, 450);
+      setTimeout(() => { window.location.href = href; }, 420);
     });
 
-    /* ── CUSTOM CURSOR ── */
+    /* CURSOR */
     const cursor = document.getElementById('cursor');
-    let mx = window.innerWidth / 2;
-    let my = window.innerHeight / 2;
+    let mx = window.innerWidth / 2, my = window.innerHeight / 2;
     let cx = mx, cy = my;
-    let cursorVisible = false;
+    cursor.style.opacity = '0';
 
     document.addEventListener('mousemove', e => {
-      mx = e.clientX;
-      my = e.clientY;
-      if (!cursorVisible) {
-        cursorVisible = true;
-        cursor.classList.remove('hidden');
-      }
+      mx = e.clientX; my = e.clientY;
+      cursor.style.opacity = '1';
     });
+    document.addEventListener('mouseleave', () => cursor.style.opacity = '0');
 
-    document.addEventListener('mouseleave', () => cursor.classList.add('hidden'));
-    document.addEventListener('mouseenter', () => cursor.classList.remove('hidden'));
-
-    cursor.classList.add('hidden');
-
-    (function animCursor() {
+    (function tick() {
       cx += (mx - cx) * 0.12;
       cy += (my - cy) * 0.12;
       cursor.style.left = cx + 'px';
       cursor.style.top  = cy + 'px';
-      requestAnimationFrame(animCursor);
+      requestAnimationFrame(tick);
     })();
 
-    document.querySelectorAll('a, button').forEach(el => {
-      el.addEventListener('mouseenter', () => cursor.classList.add('hovering'));
-      el.addEventListener('mouseleave', () => cursor.classList.remove('hovering'));
+    document.querySelectorAll('.project-scene').forEach(s => {
+      s.addEventListener('mouseenter', () => cursor.classList.add('big'));
+      s.addEventListener('mouseleave', () => cursor.classList.remove('big'));
     });
 
-    /* ── SCROLL PROGRESS ── */
-    const progressBar = document.getElementById('progress');
-    function updateProgress() {
-      const total = document.documentElement.scrollHeight - window.innerHeight;
-      const pct = total > 0 ? (window.scrollY / total) * 100 : 0;
-      progressBar.style.width = pct + '%';
-    }
-    window.addEventListener('scroll', updateProgress, { passive: true });
-    updateProgress();
+    /* SECTION DOTS */
+    const sections = Array.from(document.querySelectorAll('.snap-section'));
+    const dotsWrap = document.getElementById('dots');
+    sections.forEach((s, i) => {
+      const d = document.createElement('div');
+      d.className = 'sdot';
+      d.addEventListener('click', () => s.scrollIntoView({ behavior: 'smooth' }));
+      dotsWrap.appendChild(d);
+    });
+    const allDots = dotsWrap.querySelectorAll('.sdot');
 
-    /* ── STAGGERED SCROLL REVEAL ── */
-    const revealEls = document.querySelectorAll('.reveal');
-    const revealObserver = new IntersectionObserver((entries) => {
+    /* INTERSECTION — enter effects + active dot */
+    const io = new IntersectionObserver(entries => {
       entries.forEach(entry => {
         if (!entry.isIntersecting) return;
-        const el = entry.target;
-        const delay = parseInt(el.dataset.revealDelay || 0);
-        setTimeout(() => {
-          el.style.transition = 'opacity 0.55s ease, transform 0.55s ease';
-          el.style.opacity = '1';
-          el.style.transform = 'translateY(0)';
-        }, delay);
-        revealObserver.unobserve(el);
-      });
-    }, { threshold: 0.12 });
+        const sec = entry.target;
+        const idx = sections.indexOf(sec);
+        allDots.forEach((d, i) => d.classList.toggle('active', i === idx));
 
-    let cardIndex = 0;
-    revealEls.forEach(el => {
-      if (el.classList.contains('project-link')) {
-        el.dataset.revealDelay = cardIndex * 90;
-        cardIndex++;
-      }
-      revealObserver.observe(el);
+        if (sec.classList.contains('project-scene') && !sec.classList.contains('entered')) {
+          sec.classList.add('entered');
+          const titleEl = sec.querySelector('.scene-title');
+          if (titleEl) scramble(titleEl);
+          if (sec.dataset.tint) sec.style.backgroundColor = sec.dataset.tint;
+        }
+      });
+    }, { threshold: 0.6 });
+
+    sections.forEach(s => {
+      if (s.dataset.tint) s.style.backgroundColor = s.dataset.tint;
+      io.observe(s);
     });
 
-    /* ── MAGNETIC NAV LINKS ── */
+    /* TEXT SCRAMBLE */
+    function scramble(el) {
+      const text = el.dataset.text || el.textContent;
+      const pool = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+      let iter = 0;
+      const id = setInterval(() => {
+        el.textContent = text.split('').map((ch, i) => {
+          if (ch === ' ') return ' ';
+          if (i < iter) return ch;
+          return pool[Math.floor(Math.random() * pool.length)];
+        }).join('');
+        iter += 0.45;
+        if (iter > text.length) { el.textContent = text; clearInterval(id); }
+      }, 32);
+    }
+
+    /* 3D TILT */
+    document.querySelectorAll('.project-scene').forEach(scene => {
+      const inner = scene.querySelector('.scene-inner');
+      scene.addEventListener('mousemove', e => {
+        const r = scene.getBoundingClientRect();
+        const x = (e.clientX - r.left) / r.width  - 0.5;
+        const y = (e.clientY - r.top)  / r.height - 0.5;
+        inner.style.transform = `perspective(1100px) rotateY(${x * 5}deg) rotateX(${-y * 3}deg)`;
+      });
+      scene.addEventListener('mouseleave', () => {
+        inner.style.transform = 'perspective(1100px) rotateY(0deg) rotateX(0deg)';
+      });
+    });
+
+    /* MAGNETIC NAV */
     document.querySelectorAll('nav a').forEach(link => {
       link.addEventListener('mousemove', e => {
-        const rect = link.getBoundingClientRect();
-        const cx = rect.left + rect.width / 2;
-        const cy = rect.top + rect.height / 2;
-        const dx = (e.clientX - cx) * 0.3;
-        const dy = (e.clientY - cy) * 0.3;
+        const r = link.getBoundingClientRect();
+        const dx = (e.clientX - (r.left + r.width  / 2)) * 0.3;
+        const dy = (e.clientY - (r.top  + r.height / 2)) * 0.3;
         link.style.transform = `translate(${dx}px, ${dy}px)`;
       });
-      link.addEventListener('mouseleave', () => {
-        link.style.transform = 'translate(0, 0)';
-      });
+      link.addEventListener('mouseleave', () => { link.style.transform = ''; });
     });
   </script>
 </body>
