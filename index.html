@@ -115,30 +115,32 @@
 
     /* ── HERO ── */
     .hero-scene {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
+      display: flex;
+      flex-direction: column;
       align-items: center;
-      padding: 0 80px;
-      gap: 64px;
+      justify-content: center;
+      padding: 0 40px;
+      text-align: center;
       background: #fff;
+      gap: 0;
     }
 
-    .hero-left {
-      opacity: 0;
-      animation: fadeUp 0.9s ease forwards 0.15s;
-    }
     .hero-name {
-      width: 100%;
-      max-width: 460px;
+      width: 600px;
+      max-width: 92vw;
       display: block;
-      margin-bottom: 28px;
+      margin-bottom: 36px;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards 0.1s;
     }
     .hero-bio {
-      font-size: 15px;
-      line-height: 1.72;
-      color: #555;
-      max-width: 400px;
-      margin-bottom: 40px;
+      font-size: 16px;
+      line-height: 1.65;
+      color: #000;
+      max-width: 700px;
+      margin-bottom: 48px;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards 0.35s;
     }
     .scroll-hint {
       font-size: 10px;
@@ -162,23 +164,23 @@
       50%      { transform: scaleX(1.8); opacity: 1; }
     }
 
-    .hero-right {
+    .hero-photo-wrap {
       opacity: 0;
-      animation: fadeUp 0.9s ease forwards 0.4s;
-      display: flex;
-      justify-content: center;
+      animation: fadeUp 0.8s ease forwards 0.6s;
+      margin-bottom: 32px;
     }
     .hero-photo {
       width: 520px;
       height: 305px;
-      max-width: 90%;
+      max-width: 90vw;
+      display: block;
       object-fit: cover;
       object-position: center 50%;
       filter: grayscale(100%) contrast(1.1);
       border-radius: 50%;
       transition: filter 0.6s ease;
     }
-    .hero-right:hover .hero-photo {
+    .hero-photo-wrap:hover .hero-photo {
       filter: grayscale(0%) contrast(1);
     }
 
@@ -369,12 +371,8 @@
       html  { scroll-snap-type: none; }
       #cursor, #dots { display: none; }
       .snap-section { height: auto; min-height: 100vh; }
-      .hero-scene {
-        grid-template-columns: 1fr;
-        padding: 96px 28px 60px;
-        gap: 40px;
-      }
-      .hero-photo { max-width: 100%; height: 280px; border-radius: 24px; }
+      .hero-scene { padding: 80px 24px 60px; }
+      .hero-bio { font-size: 15px; }
       .scene-inner { padding: 60px 28px; }
       .scene-body { grid-template-columns: 1fr; gap: 28px; }
       .scene-title { font-size: clamp(48px, 13vw, 80px); }
@@ -394,16 +392,13 @@
 
   <!-- HERO -->
   <section class="snap-section hero-scene" data-idx="0">
-    <div class="hero-left">
-      <img class="hero-name" src="name.jpg" alt="Chloe Inocencio" />
-      <p class="hero-bio">
-        I build products at the intersection of data, design, and human experience.
-        Starting from a background in engineering and analytics, I've grown into designing
-        systems that feel intuitive, purposeful, and user-first.
-      </p>
-      <span class="scroll-hint">scroll</span>
-    </div>
-    <div class="hero-right">
+    <img class="hero-name" src="name.jpg" alt="Chloe Inocencio" />
+    <p class="hero-bio">
+      I build products at the intersection of data, design, and human experience.
+      Starting from a background in engineering and analytics, I've grown into designing
+      systems that feel intuitive, purposeful, and user-first.
+    </p>
+    <div class="hero-photo-wrap">
       <img
         class="hero-photo"
         src="photo.jpg"
@@ -411,6 +406,7 @@
         onerror="this.style.display='none'"
       />
     </div>
+    <span class="scroll-hint">scroll</span>
   </section>
 
   <!-- PROJECTS -->
