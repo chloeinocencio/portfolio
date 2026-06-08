@@ -379,20 +379,48 @@
 
     /* ── MOBILE ── */
     @media (max-width: 768px) {
-      body  { cursor: auto; }
-      html  { scroll-snap-type: none; }
+      body { cursor: auto; }
+      html { scroll-snap-type: none; }
       #cursor, #dots { display: none; }
-      .snap-section { height: auto; min-height: 100vh; }
-      .hero-scene { padding: 80px 24px 60px; }
-      .hero-bio { font-size: 15px; }
-      a.scene-link { padding: 52px 28px 44px; }
-      .scene-arrow { right: 28px; }
-      .scene-body { grid-template-columns: 1fr; gap: 24px; }
-      .scene-title { font-size: clamp(48px, 13vw, 80px); }
-      .scene-image { min-height: 220px; }
-      .footer-scene { padding: 52px 28px 36px; }
-      .footer-bar { grid-template-columns: 1fr; gap: 6px; }
-      .footer-bar-right { text-align: left; }
+
+      /* sections scroll naturally */
+      .snap-section { height: auto; min-height: 100svh; }
+
+      /* hero */
+      .hero-scene { padding: 100px 24px 64px; }
+      .hero-name { width: 100%; max-width: 320px; margin-bottom: 24px; }
+      .hero-bio { font-size: 15px; line-height: 1.7; margin-bottom: 36px; }
+      .hero-photo { width: 100%; max-width: 100%; height: 220px; }
+
+      /* project scenes */
+      a.scene-link { padding: 40px 24px 36px; }
+      .scene-num { margin-bottom: 10px; }
+      .scene-title { font-size: clamp(40px, 12vw, 64px); margin-bottom: 14px; }
+      .scene-rule { margin-bottom: 24px; }
+      .scene-body {
+        grid-template-columns: 1fr;
+        gap: 20px;
+        padding-top: 20px;
+      }
+      .scene-desc { font-size: 14px; max-width: 100%; }
+      .scene-image { min-height: 200px; height: 200px; }
+      .scene-watermark { font-size: 55vw; }
+
+      /* footer */
+      .footer-scene { padding: 56px 24px 40px; gap: 0; }
+      .footer-body { padding-bottom: 40px; }
+      .footer-headline {
+        font-size: clamp(28px, 8vw, 44px);
+        margin-bottom: 40px;
+        line-height: 1.25;
+      }
+      .footer-actions { flex-direction: column; align-items: flex-start; gap: 20px; }
+      .footer-btn { width: 100%; text-align: center; padding: 16px 24px; }
+      .footer-bar {
+        grid-template-columns: 1fr;
+        gap: 4px;
+      }
+      .footer-bar-right { text-align: left; margin-top: 12px; }
     }
   </style>
 </head>
