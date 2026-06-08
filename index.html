@@ -15,6 +15,42 @@
       font-family: Helvetica, Arial, sans-serif;
       background: #fff;
       color: #000;
+      cursor: none;
+    }
+
+    /* CUSTOM CURSOR */
+    #cursor {
+      position: fixed;
+      width: 8px;
+      height: 8px;
+      background: #000;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 99999;
+      transform: translate(-50%, -50%);
+      transition: width 0.25s ease, height 0.25s ease,
+                  background 0.25s ease, border 0.25s ease,
+                  opacity 0.3s ease;
+      will-change: left, top;
+    }
+    #cursor.hovering {
+      width: 40px;
+      height: 40px;
+      background: transparent;
+      border: 1.5px solid #000;
+    }
+    #cursor.hidden { opacity: 0; }
+
+    /* SCROLL PROGRESS */
+    #progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 2px;
+      background: #000;
+      z-index: 10000;
+      width: 0%;
+      transition: width 0.08s linear;
     }
 
     /* NAV */
@@ -36,6 +72,8 @@
       font-size: 15px;
       color: #000;
       text-decoration: none;
+      display: inline-block;
+      transition: transform 0.15s ease;
     }
 
     nav a:hover {
@@ -52,14 +90,8 @@
     }
 
     @keyframes fadeUp {
-      from {
-        opacity: 0;
-        transform: translateY(28px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      from { opacity: 0; transform: translateY(28px); }
+      to   { opacity: 1; transform: translateY(0); }
     }
 
     .hero-name {
@@ -83,6 +115,15 @@
       animation-delay: 0.35s;
     }
 
+    /* PHOTO */
+    .photo-wrap {
+      position: relative;
+      display: inline-block;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards;
+      animation-delay: 0.6s;
+    }
+
     .hero-photo {
       width: 520px;
       height: 305px;
@@ -92,9 +133,28 @@
       object-fit: cover;
       object-position: center 50%;
       border-radius: 50%;
+      transition: filter 0.6s ease;
+    }
+
+    .photo-wrap:hover .hero-photo {
+      filter: grayscale(0%) contrast(1);
+    }
+
+    .photo-caption {
+      position: absolute;
+      bottom: -28px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 13px;
+      color: #888;
+      white-space: nowrap;
       opacity: 0;
-      animation: fadeUp 0.8s ease forwards;
-      animation-delay: 0.6s;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+    }
+
+    .photo-wrap:hover .photo-caption {
+      opacity: 1;
     }
 
     /* PROJECTS */
@@ -112,25 +172,29 @@
       margin-bottom: 40px;
     }
 
+    a.project-link {
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+
     .project-card {
       display: flex;
-      align-items: flex-start;
+      align-items: center;
       gap: 32px;
       background: #f2f2f2;
       border-radius: 16px;
       padding: 28px;
       margin-bottom: 20px;
-      transition: background 0.2s ease;
+      transition: background 0.25s ease,
+                  transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+                  box-shadow 0.3s ease;
     }
 
     .project-card:hover {
-      background: #fafafa;
-    }
-
-    a.project-link {
-      text-decoration: none;
-      color: inherit;
-      display: block;
+      background: #efefef;
+      transform: translateY(-5px);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.09);
     }
 
     .project-image {
@@ -144,11 +208,19 @@
     }
 
     .project-image.placeholder {
-      /* empty placeholder style matches screenshots */
+      background: linear-gradient(135deg, #e4e4e4 0%, #d0d0d0 50%, #e4e4e4 100%);
+      background-size: 200% 200%;
+      background-position: 0% 0%;
+      transition: background-position 0.5s ease;
+    }
+
+    .project-card:hover .project-image.placeholder {
+      background-position: 100% 100%;
     }
 
     .project-info {
       padding-top: 4px;
+      flex: 1;
     }
 
     .project-name {
@@ -171,6 +243,21 @@
       line-height: 1.55;
     }
 
+    .project-arrow {
+      font-size: 20px;
+      color: #000;
+      opacity: 0;
+      transform: translateX(-10px);
+      transition: opacity 0.25s ease, transform 0.25s ease;
+      flex-shrink: 0;
+      padding-right: 4px;
+    }
+
+    .project-card:hover .project-arrow {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
     /* ART PORTFOLIO */
     .art-section {
       padding: 40px 40px 80px;
@@ -187,42 +274,6 @@
       text-decoration: underline;
     }
 
-    /* MOBILE */
-    @media (max-width: 600px) {
-      .hero {
-        padding: 80px 24px 60px;
-      }
-
-      .hero-bio {
-        font-size: 15px;
-      }
-
-      .section {
-        padding: 60px 20px;
-      }
-
-      .project-card {
-        flex-direction: column;
-        gap: 16px;
-      }
-
-      .project-image {
-        width: 100%;
-        height: 180px;
-      }
-
-      .project-info {
-        padding-top: 0;
-      }
-    }
-
-    /* SCROLL ANIMATIONS */
-    .reveal {
-      opacity: 0;
-      transform: translateY(36px);
-      will-change: opacity, transform;
-    }
-
     /* FOOTER */
     footer {
       text-align: center;
@@ -230,6 +281,13 @@
       font-size: 13px;
       color: #444;
       border-top: 1px solid #eee;
+    }
+
+    /* SCROLL REVEAL */
+    .reveal {
+      opacity: 0;
+      transform: translateY(36px);
+      will-change: opacity, transform;
     }
 
     /* PAGE TRANSITION OVERLAY */
@@ -242,11 +300,36 @@
       opacity: 1;
       transition: opacity 0.45s ease;
     }
-    #page-cover.hidden { opacity: 0; }
+    #page-cover.hidden  { opacity: 0; }
     #page-cover.visible { opacity: 1; }
+
+    /* MOBILE */
+    @media (max-width: 600px) {
+      body { cursor: auto; }
+      #cursor { display: none; }
+
+      .hero { padding: 80px 24px 60px; }
+      .hero-bio { font-size: 15px; }
+      .section { padding: 60px 20px; }
+
+      .project-card {
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      .project-image {
+        width: 100%;
+        height: 180px;
+      }
+
+      .project-info { padding-top: 0; }
+      .project-arrow { display: none; }
+    }
   </style>
 </head>
 <body>
+  <div id="cursor"></div>
+  <div id="progress"></div>
   <div id="page-cover"></div>
 
   <nav>
@@ -263,12 +346,15 @@
       systems that feel intuitive, purposeful, and user-first.
     </p>
 
-    <img
-      class="hero-photo"
-      src="photo.jpg"
-      alt="Chloe Inocencio"
-      onerror="this.style.display='none'"
-    />
+    <div class="photo-wrap">
+      <img
+        class="hero-photo"
+        src="photo.jpg"
+        alt="Chloe Inocencio"
+        onerror="this.style.display='none'"
+      />
+      <span class="photo-caption">that's me :)</span>
+    </div>
   </section>
 
   <div class="section">
@@ -282,6 +368,7 @@
           <div class="project-stack"></div>
           <div class="project-desc">Coming soon.</div>
         </div>
+        <span class="project-arrow">→</span>
       </div>
     </a>
 
@@ -293,6 +380,7 @@
           <div class="project-stack"></div>
           <div class="project-desc">Coming soon.</div>
         </div>
+        <span class="project-arrow">→</span>
       </div>
     </a>
 
@@ -304,6 +392,7 @@
           <div class="project-stack"></div>
           <div class="project-desc">Coming soon.</div>
         </div>
+        <span class="project-arrow">→</span>
       </div>
     </a>
 
@@ -315,6 +404,7 @@
           <div class="project-stack"></div>
           <div class="project-desc">Coming soon.</div>
         </div>
+        <span class="project-arrow">→</span>
       </div>
     </a>
 
@@ -326,9 +416,9 @@
           <div class="project-stack"></div>
           <div class="project-desc">Coming soon.</div>
         </div>
+        <span class="project-arrow">→</span>
       </div>
     </a>
-
   </div>
 
   <div class="art-section reveal">
@@ -341,11 +431,11 @@
   </footer>
 
   <script>
-    // Page enter
+    /* ── PAGE ENTER ── */
     const cover = document.getElementById('page-cover');
     requestAnimationFrame(() => requestAnimationFrame(() => cover.classList.add('hidden')));
 
-    // Page exit on internal links
+    /* ── PAGE EXIT ── */
     document.addEventListener('click', e => {
       const link = e.target.closest('a[href]');
       if (!link) return;
@@ -357,22 +447,89 @@
       setTimeout(() => { window.location.href = href; }, 450);
     });
 
-    // Scroll reveal
-    const revealEls = document.querySelectorAll('.reveal');
-    function updateScroll() {
-      const vh = window.innerHeight;
-      revealEls.forEach(el => {
-        const rect = el.getBoundingClientRect();
-        const enter = (vh - rect.top) / (vh * 0.35);
-        const exit = 1 - Math.max(0, (-rect.bottom) / (vh * 0.2));
-        const p = Math.min(1, Math.max(0, Math.min(enter, exit)));
-        el.style.opacity = p;
-        el.style.transform = `translateY(${(1 - p) * 36}px)`;
-      });
-    }
-    window.addEventListener('scroll', updateScroll, { passive: true });
-    updateScroll();
-  </script>
+    /* ── CUSTOM CURSOR ── */
+    const cursor = document.getElementById('cursor');
+    let mx = window.innerWidth / 2;
+    let my = window.innerHeight / 2;
+    let cx = mx, cy = my;
+    let cursorVisible = false;
 
+    document.addEventListener('mousemove', e => {
+      mx = e.clientX;
+      my = e.clientY;
+      if (!cursorVisible) {
+        cursorVisible = true;
+        cursor.classList.remove('hidden');
+      }
+    });
+
+    document.addEventListener('mouseleave', () => cursor.classList.add('hidden'));
+    document.addEventListener('mouseenter', () => cursor.classList.remove('hidden'));
+
+    cursor.classList.add('hidden');
+
+    (function animCursor() {
+      cx += (mx - cx) * 0.12;
+      cy += (my - cy) * 0.12;
+      cursor.style.left = cx + 'px';
+      cursor.style.top  = cy + 'px';
+      requestAnimationFrame(animCursor);
+    })();
+
+    document.querySelectorAll('a, button').forEach(el => {
+      el.addEventListener('mouseenter', () => cursor.classList.add('hovering'));
+      el.addEventListener('mouseleave', () => cursor.classList.remove('hovering'));
+    });
+
+    /* ── SCROLL PROGRESS ── */
+    const progressBar = document.getElementById('progress');
+    function updateProgress() {
+      const total = document.documentElement.scrollHeight - window.innerHeight;
+      const pct = total > 0 ? (window.scrollY / total) * 100 : 0;
+      progressBar.style.width = pct + '%';
+    }
+    window.addEventListener('scroll', updateProgress, { passive: true });
+    updateProgress();
+
+    /* ── STAGGERED SCROLL REVEAL ── */
+    const revealEls = document.querySelectorAll('.reveal');
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        const el = entry.target;
+        const delay = parseInt(el.dataset.revealDelay || 0);
+        setTimeout(() => {
+          el.style.transition = 'opacity 0.55s ease, transform 0.55s ease';
+          el.style.opacity = '1';
+          el.style.transform = 'translateY(0)';
+        }, delay);
+        revealObserver.unobserve(el);
+      });
+    }, { threshold: 0.12 });
+
+    let cardIndex = 0;
+    revealEls.forEach(el => {
+      if (el.classList.contains('project-link')) {
+        el.dataset.revealDelay = cardIndex * 90;
+        cardIndex++;
+      }
+      revealObserver.observe(el);
+    });
+
+    /* ── MAGNETIC NAV LINKS ── */
+    document.querySelectorAll('nav a').forEach(link => {
+      link.addEventListener('mousemove', e => {
+        const rect = link.getBoundingClientRect();
+        const cx = rect.left + rect.width / 2;
+        const cy = rect.top + rect.height / 2;
+        const dx = (e.clientX - cx) * 0.3;
+        const dy = (e.clientY - cy) * 0.3;
+        link.style.transform = `translate(${dx}px, ${dy}px)`;
+      });
+      link.addEventListener('mouseleave', () => {
+        link.style.transform = 'translate(0, 0)';
+      });
+    });
+  </script>
 </body>
 </html>
