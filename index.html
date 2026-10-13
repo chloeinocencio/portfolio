@@ -36,7 +36,19 @@
     header {
       padding-top: 28px;
       margin-bottom: 56px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
     }
+    .avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      object-fit: cover;
+      flex-shrink: 0;
+      background: var(--tile);
+    }
+    .intro { flex: 1; min-width: 0; }
     .top {
       display: flex;
       align-items: baseline;
@@ -143,7 +155,8 @@
     /* ── MOBILE ── */
     @media (max-width: 720px) {
       :root { --gutter: 20px; }
-      header { padding-top: 22px; margin-bottom: 40px; }
+      header { padding-top: 22px; margin-bottom: 40px; gap: 12px; align-items: flex-start; }
+      .avatar { width: 40px; height: 40px; }
       .top { gap: 16px; }
       .links { gap: 14px; }
       .grid { grid-template-columns: 1fr; row-gap: 48px; }
@@ -155,16 +168,19 @@
   <div id="page-cover"></div>
   <div class="wrap">
     <header>
+      <img class="avatar" src="avatar.jpg" alt="Chloe Inocencio" width="48" height="48" />
+      <div class="intro">
       <div class="top">
         <span class="name">CHLOE INOCENCIO</span>
         <nav class="links">
           <a href="https://www.linkedin.com/in/chloe-inocencio" target="_blank" rel="noopener">LinkedIn</a>
-          <a href="mailto:chloe94612@gmail.com">Email</a>
+          <a href="mailto:chloeinocencio.contact@gmail.com">Email</a>
         </nav>
       </div>
       <p class="bio">
         Half engineer, half designer, 100% user-focused. Let's create!
       </p>
+      </div>
     </header>
 
     <main class="grid">
@@ -193,8 +209,8 @@
         <p class="title">Recap</p>
         <p class="desc">Coming soon.</p>
       </a>
-      <a class="project" href="mems.html">
-        <div class="shot"><div class="ph t2"></div></div>
+      <a class="project" href="seventyfive.html">
+        <div class="shot"><div class="ph t3"></div></div>
         <p class="title">75</p>
         <p class="desc">Coming soon.</p>
       </a>
