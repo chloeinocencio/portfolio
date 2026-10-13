@@ -7,364 +7,128 @@
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
-    html {
-      scroll-snap-type: y mandatory;
-      overflow-y: scroll;
-      height: 100%;
+    :root {
+      --ink: #111110;
+      --muted: #8a8a86;
+      --tile: #f0efec;
+      --gutter: 32px;
     }
 
     body {
-      font-family: Helvetica, Arial, sans-serif;
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
       background: #fff;
-      color: #000;
-      cursor: none;
-      height: 100%;
+      color: var(--ink);
+      font-size: 15px;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
     }
 
-    /* ── CURSOR ── */
-    #cursor {
-      position: fixed;
-      width: 10px;
-      height: 10px;
-      background: #000;
-      border-radius: 50%;
-      pointer-events: none;
-      z-index: 99999;
-      transform: translate(-50%, -50%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: width 0.3s cubic-bezier(0.34,1.56,0.64,1),
-                  height 0.3s cubic-bezier(0.34,1.56,0.64,1),
-                  background 0.3s ease,
-                  opacity 0.25s ease;
-      will-change: left, top;
-    }
-    #cursor.big {
-      width: 80px;
-      height: 80px;
-      background: #000;
-    }
-    #cursor-label {
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 0.14em;
-      color: #fff;
-      opacity: 0;
-      transition: opacity 0.2s ease;
-      white-space: nowrap;
-      user-select: none;
-    }
-    #cursor.big #cursor-label { opacity: 1; }
+    a { color: inherit; text-decoration: none; }
 
-    /* ── NAV ── */
-    nav {
-      position: fixed;
-      top: 0;
-      right: 0;
-      padding: 24px 48px;
+    .wrap {
+      padding: 0 var(--gutter);
+      max-width: 1440px;
+      margin: 0 auto;
+    }
+
+    /* ── HEADER ── */
+    header {
+      padding-top: 28px;
+      margin-bottom: 56px;
+    }
+    .top {
       display: flex;
+      align-items: baseline;
+      justify-content: space-between;
       gap: 28px;
-      z-index: 300;
+      margin-bottom: 2px;
     }
-    nav a {
-      font-size: 13px;
-      letter-spacing: 0.08em;
-      color: #000;
-      text-decoration: none;
-      display: inline-block;
-      transition: transform 0.15s ease;
-    }
-    nav a:hover { text-decoration: underline; }
-
-    /* ── SECTION DOTS ── */
-    #dots {
-      position: fixed;
-      right: 22px;
-      top: 50%;
-      transform: translateY(-50%);
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      z-index: 400;
-    }
-    .sdot {
-      width: 5px;
-      height: 5px;
-      border-radius: 50%;
-      background: #bbb;
-      transition: background 0.3s, transform 0.3s;
-      cursor: none;
-    }
-    .sdot.active {
-      background: #000;
-      transform: scale(1.6);
-    }
-
-    /* ── SNAP SECTIONS ── */
-    .snap-section {
-      height: 100vh;
-      width: 100vw;
-      scroll-snap-align: start;
-      position: relative;
-      overflow: hidden;
-    }
-
-    /* ── HERO ── */
-    .hero-scene {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 120px 40px 80px;
-      text-align: center;
-      background: #fff;
-      overflow-y: auto;
-    }
-    .hero-name {
-      width: 600px;
-      max-width: 92vw;
-      display: block;
-      margin-bottom: 36px;
-      opacity: 0;
-      animation: fadeUp 0.8s ease forwards 0.1s;
-    }
-    .hero-bio {
-      font-size: 16px;
-      line-height: 1.65;
-      color: #000;
-      max-width: 700px;
-      margin-bottom: 48px;
-      opacity: 0;
-      animation: fadeUp 0.8s ease forwards 0.35s;
-    }
-    .hero-photo-wrap {
-      opacity: 0;
-      animation: fadeUp 0.8s ease forwards 0.6s;
-    }
-    .hero-photo {
-      width: 520px;
-      height: 305px;
-      max-width: 90vw;
-      display: block;
-      object-fit: cover;
-      object-position: center 50%;
-      filter: grayscale(100%) contrast(1.1);
-      border-radius: 50%;
-      transition: filter 0.6s ease;
-    }
-    .hero-photo-wrap:hover .hero-photo {
-      filter: grayscale(0%) contrast(1);
-    }
-
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(30px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    /* ── PROJECT SCENES ── */
-    .project-scene {
-      position: relative;
-      transition: background-color 0.5s ease;
-    }
-
-    /* huge watermark number behind everything */
-    .scene-watermark {
-      position: absolute;
-      top: 50%;
-      left: -0.02em;
-      transform: translateY(-52%);
-      font-family: Helvetica, Arial, sans-serif;
-      font-size: 42vw;
-      font-weight: 700;
-      letter-spacing: -0.05em;
-      color: #000;
-      opacity: 0.028;
-      pointer-events: none;
-      line-height: 1;
-      z-index: 0;
-      user-select: none;
-    }
-
-    a.scene-link {
-      display: flex;
-      flex-direction: column;
-      height: 100%;
-      padding: 52px 80px 44px;
-      text-decoration: none;
-      color: inherit;
-      position: relative;
-      z-index: 1;
-    }
-
-
-    .scene-content {
-      display: flex;
-      flex-direction: column;
-      height: 100%;
-      transform-style: preserve-3d;
-      transition: transform 0.08s ease-out;
-      will-change: transform;
-    }
-
-    /* header: num + title + rule — full width */
-    .scene-header {
-      flex-shrink: 0;
-    }
-    .scene-num {
-      font-size: 10px;
-      letter-spacing: 0.28em;
-      color: #aaa;
-      display: block;
-      margin-bottom: 14px;
-    }
-    .scene-title {
-      display: block;
-      font-family: Helvetica, Arial, sans-serif;
-      font-size: clamp(56px, 11vw, 148px);
+    .name {
+      font-size: 17px;
       font-weight: 700;
       letter-spacing: 0.01em;
-      line-height: 0.88;
-      margin-bottom: 20px;
     }
-    .scene-rule {
-      height: 1px;
-      background: #000;
-      transform: scaleX(0);
-      transform-origin: left;
-      transition: transform 0.9s cubic-bezier(0.77, 0, 0.175, 1);
+    .links {
+      display: flex;
+      gap: 18px;
+      color: var(--muted);
     }
-    .project-scene.entered .scene-rule { transform: scaleX(1); }
+    .links a { transition: color 0.2s ease; }
+    .links a:hover { color: var(--ink); }
 
-    /* body: desc left, image right */
-    .scene-body {
+    .bio {
+      max-width: 34em;
+      color: var(--muted);
+    }
+
+    /* ── WORK GRID ── */
+    .grid {
       display: grid;
-      grid-template-columns: 260px 1fr;
-      gap: 52px;
-      flex: 1;
-      min-height: 0;
-      padding-top: 28px;
-      align-items: start;
-    }
-    .scene-desc {
-      font-size: 15px;
-      color: #555;
-      line-height: 1.7;
+      grid-template-columns: 1fr 1fr;
+      column-gap: 16px;
+      row-gap: 72px;
     }
 
-    /* cinematic wipe-in image */
-    .scene-image {
+    .project { display: block; }
+
+    /* fade up on open — only when JS is running, so content never stays hidden */
+    .js .project {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.9s cubic-bezier(0.2, 0.7, 0.2, 1),
+                  transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1);
+      transition-delay: var(--delay, 0ms);
+    }
+    .js .project.in {
+      opacity: 1;
+      transform: none;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .js .project { opacity: 1; transform: none; transition: none; }
+    }
+
+    .shot {
+      aspect-ratio: 4 / 3;
+      border-radius: 10px;
+      background: var(--tile);
+      overflow: hidden;
+      margin-bottom: 14px;
+    }
+    .shot > * {
       width: 100%;
       height: 100%;
-      min-height: 160px;
-      border-radius: 20px;
       object-fit: cover;
-      clip-path: inset(0 100% 0 0 round 20px);
-      transition: clip-path 0.95s cubic-bezier(0.77, 0, 0.175, 1),
-                  transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1),
-                  box-shadow 0.45s ease;
+      display: block;
+      transition: transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1);
     }
-    .scene-image.placeholder {
-      background: linear-gradient(135deg, #e8e8e8 0%, #d0d0d0 50%, #e8e8e8 100%);
-      background-size: 200% 200%;
-      transition: clip-path 0.95s cubic-bezier(0.77, 0, 0.175, 1),
-                  transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1),
-                  box-shadow 0.45s ease,
-                  background-position 0.55s ease;
-    }
-    .project-scene.entered .scene-image {
-      clip-path: inset(0 0% 0 0 round 20px);
-      transition-delay: 0.28s;
-    }
-    a.scene-link:hover .scene-image {
-      transform: scale(1.015);
-      box-shadow: 0 28px 72px rgba(0,0,0,0.12);
-    }
-    a.scene-link:hover .scene-image.placeholder {
-      background-position: 100% 100%;
-    }
+    .project:hover .shot > * { transform: scale(1.02); }
 
-    /* ── FOOTER SCENE ── */
-    .footer-scene {
-      background: #0a0a0a;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      padding: 72px 80px 48px;
-      color: #fff;
-      position: relative;
-    }
-    .footer-body {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
-    .footer-headline {
-      font-size: clamp(32px, 5vw, 64px);
-      font-weight: 700;
-      line-height: 1.2;
-      margin-bottom: 52px;
-      max-width: 900px;
-    }
-    .footer-headline .w1 { color: #ffffff; }
-    .footer-headline .w2 { color: #aaaaaa; }
-    .footer-headline .w3 { color: #555555; }
-    .footer-headline .w4 { color: #2a2a2a; }
-    .footer-actions {
-      display: flex;
-      align-items: center;
-      gap: 32px;
-    }
-    .footer-btn {
-      display: inline-block;
-      padding: 14px 36px;
-      background: #fff;
-      color: #000;
-      font-size: 15px;
+    /* placeholder tones until real screenshots exist */
+    .ph { background: var(--tile); }
+    .ph.t2 { background: #ebeae6; }
+    .ph.t3 { background: #f3f2ef; }
+
+    .title {
       font-weight: 500;
-      font-family: Helvetica, Arial, sans-serif;
-      text-decoration: none;
-      border-radius: 6px;
-      transition: background 0.2s ease, transform 0.2s ease;
+      margin-bottom: 2px;
     }
-    .footer-btn:hover { background: #ddd; transform: translateY(-2px); }
-    .footer-avail {
+    .desc {
+      color: var(--muted);
+      max-width: 30em;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      margin-top: 160px;
+      padding: 24px 0 28px;
       display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 14px;
-      color: #ddd;
-    }
-    .avail-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: #ddd;
-      flex-shrink: 0;
-      animation: dotPulse 2.2s ease-in-out infinite;
-    }
-    @keyframes dotPulse {
-      0%, 100% { opacity: 0.4; transform: scale(1); }
-      50%       { opacity: 1;   transform: scale(1.4); }
-    }
-    .footer-bar {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      align-items: end;
-      border-top: 1px solid #1c1c1c;
-      padding-top: 28px;
+      justify-content: space-between;
+      color: var(--muted);
       font-size: 13px;
-      color: #444;
-      line-height: 1.7;
     }
-    .footer-bar a { color: #444; text-decoration: none; }
-    .footer-bar a:hover { color: #fff; }
-    .footer-bar-right { text-align: right; }
 
-    body.on-footer #cursor { background: #fff; }
-    body.on-footer #cursor.big { background: #fff; }
-
-    /* ── PAGE COVER ── */
+    /* ── PAGE TRANSITION (matches the project pages) ── */
     #page-cover {
       position: fixed;
       inset: 0;
@@ -374,311 +138,112 @@
       opacity: 1;
       transition: opacity 0.4s ease;
     }
-    #page-cover.hidden  { opacity: 0; }
-    #page-cover.visible { opacity: 1; }
+    #page-cover.hidden { opacity: 0; }
 
     /* ── MOBILE ── */
-    @media (max-width: 768px) {
-      body { cursor: auto; }
-      html { scroll-snap-type: none; }
-      #cursor, #dots { display: none; }
-
-      /* sections scroll naturally */
-      .snap-section { height: auto; min-height: 100svh; }
-
-      /* hero */
-      .hero-scene { padding: 100px 24px 64px; }
-      .hero-name { width: 100%; max-width: 320px; margin-bottom: 24px; }
-      .hero-bio { font-size: 15px; line-height: 1.7; margin-bottom: 36px; }
-      .hero-photo { width: 100%; max-width: 100%; height: 220px; }
-
-      /* project scenes */
-      a.scene-link { padding: 40px 24px 36px; }
-      .scene-num { margin-bottom: 10px; }
-      .scene-title { font-size: clamp(40px, 12vw, 64px); margin-bottom: 14px; }
-      .scene-rule { margin-bottom: 24px; }
-      .scene-body {
-        grid-template-columns: 1fr;
-        gap: 20px;
-        padding-top: 20px;
-      }
-      .scene-desc { font-size: 14px; max-width: 100%; }
-      .scene-image { min-height: 200px; height: 200px; }
-      .scene-watermark { font-size: 55vw; }
-
-      /* footer */
-      .footer-scene { padding: 56px 24px 40px; gap: 0; }
-      .footer-body { padding-bottom: 40px; }
-      .footer-headline {
-        font-size: clamp(28px, 8vw, 44px);
-        margin-bottom: 40px;
-        line-height: 1.25;
-      }
-      .footer-actions { flex-direction: column; align-items: flex-start; gap: 20px; }
-      .footer-btn { width: 100%; text-align: center; padding: 16px 24px; }
-      .footer-bar {
-        grid-template-columns: 1fr;
-        gap: 4px;
-      }
-      .footer-bar-right { text-align: left; margin-top: 12px; }
+    @media (max-width: 720px) {
+      :root { --gutter: 20px; }
+      header { padding-top: 22px; margin-bottom: 40px; }
+      .top { gap: 16px; }
+      .links { gap: 14px; }
+      .grid { grid-template-columns: 1fr; row-gap: 48px; }
+      footer { margin-top: 96px; }
     }
   </style>
 </head>
 <body>
-  <div id="cursor"><span id="cursor-label">VIEW</span></div>
   <div id="page-cover"></div>
-  <div id="dots"></div>
-
-  <nav>
-    <a href="mailto:chloe94612@gmail.com">email</a>
-    <a href="https://www.linkedin.com/in/chloe-inocencio" target="_blank">linkedin</a>
-  </nav>
-
-  <!-- HERO -->
-  <section class="snap-section hero-scene" data-idx="0">
-    <img class="hero-name" src="name.jpg" alt="Chloe Inocencio" />
-    <p class="hero-bio">
-      I build products at the intersection of data, design, and human experience.
-      Starting from a background in engineering and analytics, I've grown into designing
-      systems that feel intuitive, purposeful, and user-first.
-    </p>
-    <div class="hero-photo-wrap">
-      <img
-        class="hero-photo"
-        src="photo.jpg"
-        alt="Chloe Inocencio"
-        onerror="this.style.display='none'"
-      />
-    </div>
-  </section>
-
-  <!-- PROJECTS -->
-  <section class="snap-section project-scene" data-idx="1">
-    <span class="scene-watermark" aria-hidden="true">1</span>
-    <a class="scene-link" href="wheretwo.html">
-      <div class="scene-content">
-        <div class="scene-header">
-          <span class="scene-num">1 / 5</span>
-          <span class="scene-title" data-text="WhereTwo">WhereTwo</span>
-          <div class="scene-rule"></div>
-        </div>
-        <div class="scene-body">
-          <p class="scene-desc">Coming soon.</p>
-          <div class="scene-image placeholder"></div>
-        </div>
+  <div class="wrap">
+    <header>
+      <div class="top">
+        <span class="name">CHLOE INOCENCIO</span>
+        <nav class="links">
+          <a href="https://www.linkedin.com/in/chloe-inocencio" target="_blank" rel="noopener">LinkedIn</a>
+          <a href="mailto:chloe94612@gmail.com">Email</a>
+        </nav>
       </div>
-    </a>
-  </section>
+      <p class="bio">
+        Hello, I'm half engineer, half designer, 100% user-focused. Let's create!
+      </p>
+    </header>
 
-  <section class="snap-section project-scene" data-idx="2">
-    <span class="scene-watermark" aria-hidden="true">2</span>
-    <a class="scene-link" href="drip.html">
-      <div class="scene-content">
-        <div class="scene-header">
-          <span class="scene-num">2 / 5</span>
-          <span class="scene-title" data-text="Grind">Grind</span>
-          <div class="scene-rule"></div>
-        </div>
-        <div class="scene-body">
-          <p class="scene-desc">Coming soon.</p>
-          <div class="scene-image placeholder"></div>
-        </div>
-      </div>
-    </a>
-  </section>
+    <main class="grid">
+      <a class="project" href="wheretwo.html">
+        <div class="shot"><div class="ph"></div></div>
+        <p class="title">WhereTwo</p>
+        <p class="desc">Coming soon.</p>
+      </a>
+      <a class="project" href="drip.html">
+        <div class="shot"><div class="ph t2"></div></div>
+        <p class="title">Grind</p>
+        <p class="desc">Coming soon.</p>
+      </a>
+      <a class="project" href="plantr.html">
+        <div class="shot"><div class="ph t3"></div></div>
+        <p class="title">JadeGarden</p>
+        <p class="desc">Coming soon.</p>
+      </a>
+      <a class="project" href="mindreset.html">
+        <div class="shot"><div class="ph"></div></div>
+        <p class="title">Gotcha</p>
+        <p class="desc">Coming soon.</p>
+      </a>
+      <a class="project" href="mems.html">
+        <div class="shot"><div class="ph t2"></div></div>
+        <p class="title">Recap</p>
+        <p class="desc">Coming soon.</p>
+      </a>
+    </main>
 
-  <section class="snap-section project-scene" data-idx="3">
-    <span class="scene-watermark" aria-hidden="true">3</span>
-    <a class="scene-link" href="plantr.html">
-      <div class="scene-content">
-        <div class="scene-header">
-          <span class="scene-num">3 / 5</span>
-          <span class="scene-title" data-text="JadeGarden">JadeGarden</span>
-          <div class="scene-rule"></div>
-        </div>
-        <div class="scene-body">
-          <p class="scene-desc">Coming soon.</p>
-          <div class="scene-image placeholder"></div>
-        </div>
-      </div>
-    </a>
-  </section>
-
-  <section class="snap-section project-scene" data-idx="4">
-    <span class="scene-watermark" aria-hidden="true">4</span>
-    <a class="scene-link" href="mindreset.html">
-      <div class="scene-content">
-        <div class="scene-header">
-          <span class="scene-num">4 / 5</span>
-          <span class="scene-title" data-text="Gotcha">Gotcha</span>
-          <div class="scene-rule"></div>
-        </div>
-        <div class="scene-body">
-          <p class="scene-desc">Coming soon.</p>
-          <div class="scene-image placeholder"></div>
-        </div>
-      </div>
-    </a>
-  </section>
-
-  <section class="snap-section project-scene" data-idx="5">
-    <span class="scene-watermark" aria-hidden="true">5</span>
-    <a class="scene-link" href="mems.html">
-      <div class="scene-content">
-        <div class="scene-header">
-          <span class="scene-num">5 / 5</span>
-          <span class="scene-title" data-text="Recap">Recap</span>
-          <div class="scene-rule"></div>
-        </div>
-        <div class="scene-body">
-          <p class="scene-desc">Coming soon.</p>
-          <div class="scene-image placeholder"></div>
-        </div>
-      </div>
-    </a>
-  </section>
-
-  <!-- FOOTER -->
-  <section class="snap-section footer-scene" data-idx="6">
-    <div class="footer-body">
-      <h2 class="footer-headline">
-        <span class="w1">Good things get built</span><br>
-        <span class="w1">by the right </span><span class="w2">people</span><br>
-        <span class="w2">in the same </span><span class="w3">room.</span><br>
-        <span class="w4">You found one of them.</span>
-      </h2>
-      <div class="footer-actions">
-        <a class="footer-btn" href="mailto:chloe94612@gmail.com">Get in Touch</a>
-        <span class="footer-avail"><span class="avail-dot"></span>Available For Work</span>
-      </div>
-    </div>
-    <div class="footer-bar">
-      <div>
-        <a href="mailto:chloe94612@gmail.com">chloe94612@gmail.com</a><br>
-        <a href="https://www.linkedin.com/in/chloe-inocencio" target="_blank">linkedin.com/in/chloe-inocencio</a>
-      </div>
-      <div></div>
-      <div class="footer-bar-right">
-        All rights reserved,<br>Chloe Inocencio &copy;2026
-      </div>
-    </div>
-  </section>
+    <footer>
+      <span>&copy; 2026 Chloe Inocencio</span>
+    </footer>
+  </div>
 
   <script>
-    /* PAGE ENTER */
-    const cover = document.getElementById('page-cover');
-    requestAnimationFrame(() => requestAnimationFrame(() => cover.classList.add('hidden')));
-
-    /* PAGE EXIT */
-    document.addEventListener('click', e => {
-      const link = e.target.closest('a[href]');
-      if (!link) return;
-      const href = link.getAttribute('href');
-      if (!href || href.startsWith('http') || href.startsWith('mailto') || href.startsWith('#')) return;
-      e.preventDefault();
-      cover.classList.remove('hidden');
-      cover.classList.add('visible');
-      setTimeout(() => { window.location.href = href; }, 420);
-    });
-
-    /* CURSOR */
-    const cursor = document.getElementById('cursor');
-    let mx = window.innerWidth / 2, my = window.innerHeight / 2;
-    let cx = mx, cy = my;
-    cursor.style.opacity = '0';
-
-    document.addEventListener('mousemove', e => {
-      mx = e.clientX; my = e.clientY;
-      cursor.style.opacity = '1';
-    });
-    document.addEventListener('mouseleave', () => cursor.style.opacity = '0');
-
-    (function tick() {
-      cx += (mx - cx) * 0.12;
-      cy += (my - cy) * 0.12;
-      cursor.style.left = cx + 'px';
-      cursor.style.top  = cy + 'px';
-      requestAnimationFrame(tick);
+    /* page enter / exit fade, same as the project pages */
+    (function () {
+      var cover = document.getElementById('page-cover');
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () { cover.classList.add('hidden'); });
+      });
+      // coming back with the browser's back button: don't stay white
+      window.addEventListener('pageshow', function (e) {
+        if (e.persisted) cover.classList.add('hidden');
+      });
+      document.addEventListener('click', function (e) {
+        var link = e.target.closest('a[href]');
+        if (!link || e.metaKey || e.ctrlKey || e.shiftKey) return;
+        var href = link.getAttribute('href');
+        if (!href || /^(https?:|mailto:|#)/.test(href)) return;
+        e.preventDefault();
+        cover.classList.remove('hidden');
+        setTimeout(function () { window.location.href = href; }, 420);
+      });
     })();
 
-    document.querySelectorAll('.project-scene').forEach(s => {
-      s.addEventListener('mouseenter', () => cursor.classList.add('big'));
-      s.addEventListener('mouseleave', () => cursor.classList.remove('big'));
-    });
+    (function () {
+      var projects = document.querySelectorAll('.project');
+      if (!('IntersectionObserver' in window)) return;
+      document.documentElement.classList.add('js');
 
-    const footerScene = document.querySelector('.footer-scene');
-    footerScene.addEventListener('mouseenter', () => document.body.classList.add('on-footer'));
-    footerScene.addEventListener('mouseleave', () => document.body.classList.remove('on-footer'));
+      // boxes visible on open fade up one after another;
+      // boxes further down fade up as they scroll into view
+      var batch = 0, timer;
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (!e.isIntersecting) return;
+          var el = e.target;
+          el.style.setProperty('--delay', (batch++ * 110) + 'ms');
+          el.classList.add('in');
+          io.unobserve(el);
+        });
+        clearTimeout(timer);
+        timer = setTimeout(function () { batch = 0; }, 120);
+      }, { threshold: 0.12 });
 
-    /* SECTION DOTS */
-    const sections = Array.from(document.querySelectorAll('.snap-section'));
-    const dotsWrap = document.getElementById('dots');
-    sections.forEach((s, i) => {
-      const d = document.createElement('div');
-      d.className = 'sdot';
-      d.addEventListener('click', () => s.scrollIntoView({ behavior: 'smooth' }));
-      dotsWrap.appendChild(d);
-    });
-    const allDots = dotsWrap.querySelectorAll('.sdot');
-
-    /* INTERSECTION — enter effects + active dot */
-    const io = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        if (!entry.isIntersecting) return;
-        const sec = entry.target;
-        const idx = sections.indexOf(sec);
-        allDots.forEach((d, i) => d.classList.toggle('active', i === idx));
-
-        if (sec.classList.contains('project-scene') && !sec.classList.contains('entered')) {
-          sec.classList.add('entered');
-          const titleEl = sec.querySelector('.scene-title');
-          if (titleEl) scramble(titleEl);
-        }
-      });
-    }, { threshold: 0.6 });
-
-    sections.forEach(s => io.observe(s));
-
-    /* TEXT SCRAMBLE */
-    function scramble(el) {
-      const text = el.dataset.text || el.textContent;
-      const pool = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-      let iter = 0;
-      const id = setInterval(() => {
-        el.textContent = text.split('').map((ch, i) => {
-          if (ch === ' ') return ' ';
-          if (i < iter) return ch;
-          return pool[Math.floor(Math.random() * pool.length)];
-        }).join('');
-        iter += 0.45;
-        if (iter > text.length) { el.textContent = text; clearInterval(id); }
-      }, 32);
-    }
-
-    /* 3D TILT */
-    document.querySelectorAll('.project-scene').forEach(scene => {
-      const content = scene.querySelector('.scene-content');
-      scene.addEventListener('mousemove', e => {
-        const r = scene.getBoundingClientRect();
-        const x = (e.clientX - r.left) / r.width  - 0.5;
-        const y = (e.clientY - r.top)  / r.height - 0.5;
-        content.style.transform = `perspective(1100px) rotateY(${x * 4}deg) rotateX(${-y * 2.5}deg)`;
-      });
-      scene.addEventListener('mouseleave', () => {
-        content.style.transform = 'perspective(1100px) rotateY(0deg) rotateX(0deg)';
-      });
-    });
-
-    /* MAGNETIC NAV */
-    document.querySelectorAll('nav a').forEach(link => {
-      link.addEventListener('mousemove', e => {
-        const r = link.getBoundingClientRect();
-        const dx = (e.clientX - (r.left + r.width  / 2)) * 0.3;
-        const dy = (e.clientY - (r.top  + r.height / 2)) * 0.3;
-        link.style.transform = `translate(${dx}px, ${dy}px)`;
-      });
-      link.addEventListener('mouseleave', () => { link.style.transform = ''; });
-    });
+      projects.forEach(function (p) { io.observe(p); });
+    })();
   </script>
 </body>
 </html>
